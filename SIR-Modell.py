@@ -244,6 +244,11 @@ if __name__ == "__main__":
         t0 = 0.0
         x0 = array([1.0])
         h = 1e-2   
+    if bi_solve.example == 'SIR':
+        T = 5
+        t0 = 1
+        xO = array([397.0, 3.0, 0.0])
+        h = 1
     
     bi_solve.coeffRK(bi_solve.method)
     # actual solve phase
@@ -255,13 +260,14 @@ if __name__ == "__main__":
     bi_solve.konvergenzordnungsplott(t0,T,x0,hlist)
     #bi_solve.integrate(t0,T,x0,h)
     
-    bi_solve.exactsol()
-    t = bi_solve.tout
-    for k in xrange(dim):  # calculate error for k-th component
-         xexactk = bi_solve.xexact[:,k]
-         errork = (abs(bi_solve.xout[:,k]-xexactk))
-         for j in xrange(len(t)):
-            errork[j] = errork[j]/max(abs(xexactk[j]),1e-40)
+    #nur für unsere DGL, also SIR, auskommentiert, da wir keine exakte Lösung haben
+    #bi_solve.exactsol()
+    #t = bi_solve.tout
+    #for k in xrange(dim):  # calculate error for k-th component
+         #xexactk = bi_solve.xexact[:,k]
+         #errork = (abs(bi_solve.xout[:,k]-xexactk))
+         #for j in xrange(len(t)):
+            #errork[j] = errork[j]/max(abs(xexactk[j]),1e-40)
 
     #print bi_solve.xout
     # plotting
