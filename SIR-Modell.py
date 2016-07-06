@@ -136,13 +136,13 @@ class RKsolve(object):
             b = [1./6, 1./3, 1./3, 1./6]
             c = [0., 0.5, 0.5, 1.]
         if method == 'RungeKutta':
-            #unser Löser mit Butcher-Tableau der Größe 2 (siehe unten)
+            #unser Löser mit Butcher-Tableau der Größe 2 (siehe unten), das gamma aus der Aufgabe haben wir hier delta genannt
             self.snum = 2
-            gamma = (3-((3)**(1./2)))/6
-            A = [[gamma, 0],
-                 [1-2*gamma, gamma]]
+            delta = (3-((3)**(1./2)))/6
+            A = [[delta, 0],
+                 [1-2*delta, delta]]
             b = [1./2,1./2]
-            c = [gamma, 1-gamma]
+            c = [delta, 1-delta]
         #setzt Eigenschaften von self, fügt die entsprechenden arrays hinzu
         self.RKA = array(A)
         self.RKb = array(b)
@@ -157,6 +157,18 @@ class RKsolve(object):
         example = self.example
         if  example == 'bspBI': 
             y = -x
+        if example == 'SIR':
+            beta = 0.01
+            gamma = 0.2
+            self.gamma = gamma
+            self. beta = beta
+            y = zeros(3)
+            #y[0] = S'
+            y[0] = -beta*x[0]*x[1]
+            #y[1] = I'
+            y[1] = beta*x[0]*x[1]-gamma*x[1]
+            #y[2] = R'
+            y[2] = gamma*x[1]
         return y
 
 ########################################################
