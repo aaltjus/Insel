@@ -158,10 +158,10 @@ class RKsolve(object):
         if  example == 'bspBI': 
             y = -x
         if example == 'SIR':
-            beta = 0.01
-            gamma = 0.2
+            beta = 0.005
+            gamma = 0.79
             self.gamma = gamma
-            self. beta = beta
+            self.beta = beta
             y = zeros(3)
             #y[0] = S'
             y[0] = -beta*x[0]*x[1]
@@ -191,7 +191,13 @@ class RKsolve(object):
         # plot i-th component
         t = self.tout
         x = self.xout[:,i]
-        p0 = plot(t, x, linewidth = 2, color = 'blue', label = 'numerische Loesung')
+        p0 = plot(t, x, linewidth = 2, label = 'Anzahl der Gesunden')
+        #if i == 0:
+            #p0 = plot(t, x, linewidth = 2, label = 'Anzahl der Gesunden')
+        #if i == 1:
+            #p0 = plot(t, x, linewidth = 2, label = 'Anzahl der Kranken')
+        #if i == 2:
+            #p0 = plot(t, x, linewidth = 2, label = 'Anzahl der Resistenten')
         try:
             self.exactsol()
             p1=plot(t,self.xexact, 'r',label='exakte Loesung')
@@ -199,38 +205,39 @@ class RKsolve(object):
             print("no exact solution given")
         title('Beispiel '+self.example+' mit '+self.method+', Stufenanzahl:'+str(self.snum))
         rcParams.update({'font.size': 12})
-        legend(loc='upper right', shadow=True)
+        legend(loc='center right', shadow=True)
         xlabel('t')
         ylabel('x(t)')
         savefig('sol_'+self.example+'_'+self.method+'_s'+str(self.snum)+'_i'+str(i)+'.png')
+        #print (t[0], t[1e4], t[2*1e4], t[3*1e4], t[4*1e4]), (x[0], x[1e4], x[2*1e4], x[3*1e4], x[4*1e4])
         show()
         close()
         
 #Plott Konvergenzordnung
-    def konvergenzordnungsplott(self, t0,T,x0,hlist):
-        l = len(hlist)
-        fehler = zeros(l)
-        for i in range(l):
-             self.integrate(t0,T,x0,hlist[i])
-             # fehler = x_N - exactcol(t_N)
-             self.exactsol()
-             fehler[i] = abs(self.xout[-1] - self.xexact[-1])
-        print hlist
-        print fehler
-        yscale ('log')
-        xscale ('log')
-        plot (hlist, fehler, label = 'Fehler')
-        geradex = [1e-3, 1e0]
-        geradey = [1e-14, 1e-5]
-        title('Experimentelle Bestimmung der Konvergenzordnung')
-        xlabel('log(h)')
-        ylabel('log(maximalefehlerverstaerkung)')
-        plot (geradex, geradey, label = 'Gerade mit Steigung 3')
-        legend(loc='upper right', shadow=True)
-        show()
-        close()
+    #def konvergenzordnungsplott(self, t0,T,x0,hlist):
+        #l = len(hlist)
+        #fehler = zeros(l)
+        #for i in range(l):
+             #self.integrate(t0,T,x0,hlist[i])
+             ## fehler = x_N - exactcol(t_N)
+             #self.exactsol()
+             #fehler[i] = abs(self.xout[-1] - self.xexact[-1])
+        #print hlist
+        #print fehler
+        #yscale ('log')
+        #xscale ('log')
+        #plot (hlist, fehler, label = 'Fehler')
+        #geradex = [1e-3, 1e0]
+        #geradey = [1e-14, 1e-5]
+        #title('Experimentelle Bestimmung der Konvergenzordnung')
+        #xlabel('log(h)')
+        #ylabel('log(maximalefehlerverstaerkung)')
+        #plot (geradex, geradey, label = 'Gerade mit Steigung 3')
+        #legend(loc='upper right', shadow=True)
+        #show()
+        #close()
         
-        #t = 
+
        
         
 
@@ -242,7 +249,7 @@ class RKsolve(object):
 if __name__ == "__main__":
     # initialize a Runge Kutta solver
     bi_solve = RKsolve()
-    bi_solve.example = 'bspBI'  
+    bi_solve.example = 'SIR'  
     bi_solve.method = 'RungeKutta'
     #bi_solve.snum = 4 # number of Runge Kutta stages to be used, if not set by method itself
     
@@ -257,10 +264,10 @@ if __name__ == "__main__":
         x0 = array([1.0])
         h = 1e-2   
     if bi_solve.example == 'SIR':
-        T = 5
+        T = 20
         t0 = 1
-        xO = array([397.0, 3.0, 0.0])
-        h = 1
+        x0 = array([397.0, 3.0, 0.0])
+        h = 1e-2
     
     bi_solve.coeffRK(bi_solve.method)
     # actual solve phase
@@ -268,9 +275,9 @@ if __name__ == "__main__":
     
     # Konvergenzordnungstest
     #hlist = [h, h/2.0, h/4., h/8., h/16., h/32, h/64, h/128, h/256, h/512, h/1024, h/2048, h/4096]
-    hlist = [2**(-i) for i in xrange(12)]
-    bi_solve.konvergenzordnungsplott(t0,T,x0,hlist)
-    #bi_solve.integrate(t0,T,x0,h)
+    #hlist = [2**(-i) for i in xrange(12)]
+    #bi_solve.konvergenzordnungsplott(t0,T,x0,hlist)
+    bi_solve.integrate(t0,T,x0,h)
     
     #nur für unsere DGL, also SIR, auskommentiert, da wir keine exakte Lösung haben
     #bi_solve.exactsol()
@@ -283,7 +290,9 @@ if __name__ == "__main__":
 
     #print bi_solve.xout
     # plotting
-    if  bi_solve.example == 'bspBI':
-        bi_solve.plot(0)
+    if  bi_solve.example == 'SIR':
+        #bi_solve.plot(1)
+       bi_solve.plot((0,1,2))
+   
 
 
