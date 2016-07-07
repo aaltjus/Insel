@@ -195,14 +195,9 @@ class RKsolve(object):
         print 'x'
         print x
         print x == self.xout
+        #ordnet den jeweiligen Stellen im Vektor die richtige Bezeichnung zu, die vom Plot aufgerufen werden kann
         self.label = ['Anzahl der Gesunden', 'Anzahl der Kranken', 'Anzahl der Resistenten']
         p0 = plot(t, x, linewidth = 2, label = str(self.label[i]))
-        #if i == 0:
-            #p0 = plot(t, x, linewidth = 2, label = 'Anzahl der Gesunden')
-        #if i == 1:
-            #p0 = plot(t, x, linewidth = 2, label = 'Anzahl der Kranken')
-        #if i == 2:
-            #p0 = plot(t, x, linewidth = 2, label = 'Anzahl der Resistenten')
         try:
             self.exactsol()
             p1=plot(t,self.xexact, 'r',label='exakte Loesung')
@@ -217,30 +212,7 @@ class RKsolve(object):
         #print (t[0], t[1e4], t[2*1e4], t[3*1e4], t[4*1e4]), (x[0], x[1e4], x[2*1e4], x[3*1e4], x[4*1e4])
         #show()
         #close()
-        
-#Plott Konvergenzordnung
-    #def konvergenzordnungsplott(self, t0,T,x0,hlist):
-        #l = len(hlist)
-        #fehler = zeros(l)
-        #for i in range(l):
-             #self.integrate(t0,T,x0,hlist[i])
-             ## fehler = x_N - exactcol(t_N)
-             #self.exactsol()
-             #fehler[i] = abs(self.xout[-1] - self.xexact[-1])
-        #print hlist
-        #print fehler
-        #yscale ('log')
-        #xscale ('log')
-        #plot (hlist, fehler, label = 'Fehler')
-        #geradex = [1e-3, 1e0]
-        #geradey = [1e-14, 1e-5]
-        #title('Experimentelle Bestimmung der Konvergenzordnung')
-        #xlabel('log(h)')
-        #ylabel('log(maximalefehlerverstaerkung)')
-        #plot (geradex, geradey, label = 'Gerade mit Steigung 3')
-        #legend(loc='upper right', shadow=True)
-        #show()
-        #close()
+
          
 # run the main program
 if __name__ == "__main__":
