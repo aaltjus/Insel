@@ -190,8 +190,13 @@ class RKsolve(object):
     def plot(self,i):
         # plot i-th component
         t = self.tout
+        print self.xout
         x = self.xout[:,i]
-        p0 = plot(t, x, linewidth = 2, label = 'Anzahl der Gesunden')
+        print 'x'
+        print x
+        print x == self.xout
+        self.label = ['Anzahl der Gesunden', 'Anzahl der Kranken', 'Anzahl der Resistenten']
+        p0 = plot(t, x, linewidth = 2, label = str(self.label[i]))
         #if i == 0:
             #p0 = plot(t, x, linewidth = 2, label = 'Anzahl der Gesunden')
         #if i == 1:
@@ -210,8 +215,8 @@ class RKsolve(object):
         ylabel('x(t)')
         savefig('sol_'+self.example+'_'+self.method+'_s'+str(self.snum)+'_i'+str(i)+'.png')
         #print (t[0], t[1e4], t[2*1e4], t[3*1e4], t[4*1e4]), (x[0], x[1e4], x[2*1e4], x[3*1e4], x[4*1e4])
-        show()
-        close()
+        #show()
+        #close()
         
 #Plott Konvergenzordnung
     #def konvergenzordnungsplott(self, t0,T,x0,hlist):
@@ -236,15 +241,7 @@ class RKsolve(object):
         #legend(loc='upper right', shadow=True)
         #show()
         #close()
-        
-
-       
-        
-
-
-
-
-    
+         
 # run the main program
 if __name__ == "__main__":
     # initialize a Runge Kutta solver
@@ -291,8 +288,10 @@ if __name__ == "__main__":
     #print bi_solve.xout
     # plotting
     if  bi_solve.example == 'SIR':
-        #bi_solve.plot(1)
-       bi_solve.plot((0,1,2))
+        bi_solve.plot(0)
+        bi_solve.plot(1)
+        bi_solve.plot(2)
+        show()
    
 
 
