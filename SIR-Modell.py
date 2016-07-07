@@ -158,17 +158,13 @@ class RKsolve(object):
         if  example == 'bspBI': 
             y = -x
         if example == 'SIR':
-            beta = 0.005
-            gamma = 0.79
-            self.gamma = gamma
-            self.beta = beta
             y = zeros(3)
             #y[0] = S'
-            y[0] = -beta*x[0]*x[1]
+            y[0] = -self.beta*x[0]*x[1]
             #y[1] = I'
-            y[1] = beta*x[0]*x[1]-gamma*x[1]
+            y[1] = self.beta*x[0]*x[1]-self.gamma*x[1]
             #y[2] = R'
-            y[2] = gamma*x[1]
+            y[2] = self.gamma*x[1]
         return y
 
 ########################################################
@@ -205,7 +201,7 @@ class RKsolve(object):
         xlabel('t')
         ylabel('x(t)')
         savefig('sol_'+self.example+'_'+self.method+'_s'+str(self.snum)+'_i'+str(i)+'.png')
-        #print (t[0], t[1e4], t[2*1e4], t[3*1e4], t[4*1e4]), (x[0], x[1e4], x[2*1e4], x[3*1e4], x[4*1e4])
+        print (t[0], t[1e2], t[2*1e2], t[3*1e2], t[4*1e2]), (x[0], x[1e2], x[2*1e2], x[3*1e2], x[4*1e2])
         #show()
         #close()
 
@@ -216,6 +212,8 @@ if __name__ == "__main__":
     bi_solve = RKsolve()
     bi_solve.example = 'SIR'  
     bi_solve.method = 'RungeKutta'
+    bi_solve.beta = 0.004
+    bi_solve.gamma = 0.4
     #bi_solve.snum = 4 # number of Runge Kutta stages to be used, if not set by method itself
     
     if  bi_solve.example == 'bspBI':
