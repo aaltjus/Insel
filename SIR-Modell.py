@@ -20,7 +20,7 @@
 # fuer die VL "Angewandte Mathematik II"
 #
 #importiert die wichtigen Pakete
-from numpy import array, exp, zeros
+from numpy import array, exp, zeros, arange
 from scipy.linalg import solve
 from scipy.optimize import fsolve
 from matplotlib import use
@@ -166,6 +166,15 @@ class RKsolve(object):
             #y[2] = R'
             y[2] = self.gamma*x[1]
         return y
+    
+########################################################
+#das hier soll uns mal beta und gamma berechnen
+    #def parameterbestimmung(self):
+        #expected = [3.0, 10., 30., 65., 93.]
+        #groesstedifferenz = 1
+        #while groesstedifferenz>0.4:
+            #for i in arange(20, 0.05):
+                #beta
 
 ########################################################
 
@@ -201,10 +210,12 @@ class RKsolve(object):
         xlabel('t')
         ylabel('x(t)')
         savefig('sol_'+self.example+'_'+self.method+'_s'+str(self.snum)+'_i'+str(i)+'.png')
-        print (t[0], t[1e2], t[2*1e2], t[3*1e2], t[4*1e2]), (x[0], x[1e2], x[2*1e2], x[3*1e2], x[4*1e2])
+        #print (t[0], t[1e2], t[2*1e2], t[3*1e2], t[4*1e2]), (x[0], x[1e2], x[2*1e2], x[3*1e2], x[4*1e2])
         #show()
         #close()
-
+        
+########################################################
+        
          
 # run the main program
 if __name__ == "__main__":
@@ -227,7 +238,7 @@ if __name__ == "__main__":
         x0 = array([1.0])
         h = 1e-2   
     if bi_solve.example == 'SIR':
-        T = 20
+        T = 20.
         t0 = 1
         x0 = array([397.0, 3.0, 0.0])
         h = 1e-2
@@ -253,7 +264,11 @@ if __name__ == "__main__":
 
     #print bi_solve.xout
     # plotting
-    if  bi_solve.example == 'SIR':
+    if bi_solve.example == 'bspBI':
+        bi_solve.plot(0)
+        show()
+        close()
+    if bi_solve.example == 'SIR':
         bi_solve.plot(0)
         bi_solve.plot(1)
         bi_solve.plot(2)
