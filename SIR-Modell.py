@@ -190,14 +190,10 @@ class RKsolve(object):
     def plot(self,i):
         # plot i-th component
         t = self.tout
-        print self.xout
         x = self.xout[:,i]
-        print 'x'
-        print x
-        print x == self.xout
         #ordnet den jeweiligen Stellen im Vektor die richtige Bezeichnung zu, die vom Plot aufgerufen werden kann
-        self.label = ['Anzahl der Gesunden', 'Anzahl der Kranken', 'Anzahl der Resistenten']
-        p0 = plot(t, x, linewidth = 2, label = str(self.label[i]))
+        label = ['Anzahl der Gesunden', 'Anzahl der Kranken', 'Anzahl der Resistenten']
+        p0 = plot(t, x, linewidth = 2, label = label[i])
         try:
             self.exactsol()
             p1=plot(t,self.xexact, 'r',label='exakte Loesung')
@@ -264,6 +260,7 @@ if __name__ == "__main__":
         bi_solve.plot(1)
         bi_solve.plot(2)
         show()
+        close()
    
 
 
