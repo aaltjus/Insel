@@ -20,7 +20,7 @@
 # fuer die VL "Angewandte Mathematik II"
 #
 #importiert die wichtigen Pakete
-from numpy import array, exp, zeros, arange
+from numpy import array, exp, zeros, arange, mean
 from scipy.linalg import solve
 from scipy.optimize import fsolve
 from matplotlib import use
@@ -168,15 +168,6 @@ class RKsolve(object):
         return y
     
 ########################################################
-#das hier soll uns mal beta und gamma berechnen
-    #def parameterbestimmung(self):
-        #expected = [3.0, 10., 30., 65., 93.]
-        #groesstedifferenz = 1
-        #while groesstedifferenz>0.4:
-            #for i in arange(20, 0.05):
-                #beta
-
-########################################################
 
     # implements the analytical solution of the ODE described above
     def exactsol(self):
@@ -215,10 +206,52 @@ class RKsolve(object):
         #close()
         
 ########################################################
-        
+
+#hier werden beta und gamma automatisiert berechnet
+def parameterbestimmung():
+    expected = [3.0, 10., 30., 65., 93.]
+    bestebetaundgamma = []
+    besteabweichung = 20
+    for beta in arange(0.003, 0.006, 0.001):
+        for gamma in arange(0.4, 0.9, 0.05):
+            print 'trying beta: {}, gamma: {}'.format(beta, gamma)
+            bi_solve = RKsolve()
+            bi_solve.example = 'SIR'  
+            bi_solve.method = 'RungeKutta'
+            bi_solve.beta = beta
+            bi_solve.gamma = gamma
+            if bi_solve.example == 'SIR':
+                T = 20.
+                t0 = 1
+                x0 = array([397.0, 3.0, 0.0])
+                h = 1e-2
+            bi_solve.coeffRK(bi_solve.method)
+            bi_solve.integrate(t0,T,x0,h)
+            #setzt x so, dass in der Liste nur noch die Kranken enthalten sind
+            x = bi_solve.xout[:,1]
+            t = bi_solve.tout
+            #setzt kranke als Liste von gemessener Anzahl von Kranken an den Stellen 1,2,3,4,5
+            kranke = [x[0], x[1e2], x[2*1e2], x[3*1e2], x[4*1e2]]
+            #bestimmt die Abweichung von gemessenen Werten zu den erhofften (expected) nach Woche 1,2,3,4 und 5
+            differenzen=[]
+            for i in range (0, 5):
+                differenzen.append(expected[i] - kranke[i])
+            #bestimmt den Betrag (abs) der mittleren Abweichung
+            mittlereabweichung = abs(mean(differenzen))
+            #ersetzt die beste Abweichung mit dem aktuell besten Wert und speichert die zugehörigen beta und gamma
+            if mittlereabweichung<besteabweichung:
+                besteabweichung = mittlereabweichung
+                bestebetaundgamma = [beta, gamma]
+    print ('Die geringste mittlere Abweichung beträgt '+str(besteabweichung)+'. Die Parameter dazu lauten: beta = '+str(bestebetaundgamma[0])+' gamma = '+str(bestebetaundgamma[1]))
+            
+                
+########################################################
          
 # run the main program
 if __name__ == "__main__":
+    import sys
+    parameterbestimmung()
+    sys.exit(0)
     # initialize a Runge Kutta solver
     bi_solve = RKsolve()
     bi_solve.example = 'SIR'  
