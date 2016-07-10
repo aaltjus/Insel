@@ -200,7 +200,8 @@ class RKsolve(object):
         legend(loc='center right', shadow=True)
         xlabel('t')
         ylabel('x(t)')
-        savefig('sol_'+self.example+'_'+self.method+'_s'+str(self.snum)+'_i'+str(i)+'.png')
+        if i == 2:
+            savefig('sol_'+self.example+'_'+self.method+'_s'+str(self.snum)+'_i'+str(i)+str(self.beta)+str(self.gamma)+'.png')
         #print (t[0], t[1e2], t[2*1e2], t[3*1e2], t[4*1e2]), (x[0], x[1e2], x[2*1e2], x[3*1e2], x[4*1e2])
         #show()
         #close()
@@ -213,7 +214,7 @@ def parameterbestimmung():
     bestebetaundgamma = []
     besteabweichung = 20
     for beta in arange(0.003, 0.006, 0.001):
-        for gamma in arange(0.4, 0.9, 0.05):
+        for gamma in arange(0.4, 0.9, 0.025):
             print 'trying beta: {}, gamma: {}'.format(beta, gamma)
             bi_solve = RKsolve()
             bi_solve.example = 'SIR'  
@@ -242,22 +243,29 @@ def parameterbestimmung():
             if mittlereabweichung<besteabweichung:
                 besteabweichung = mittlereabweichung
                 bestebetaundgamma = [beta, gamma]
+                #plottet die erwarteten Werte als blaue Punkt ('bo')
+                plot([1,2,3,4,5], expected, 'bo')
+                bi_solve.plot(0)
+                bi_solve.plot(1)
+                bi_solve.plot(2)
+                show()
+                close()
     print ('Die geringste mittlere Abweichung beträgt '+str(besteabweichung)+'. Die Parameter dazu lauten: beta = '+str(bestebetaundgamma[0])+' gamma = '+str(bestebetaundgamma[1]))
+    return bestebetaundgamma
             
                 
 ########################################################
          
 # run the main program
 if __name__ == "__main__":
-    import sys
-    parameterbestimmung()
-    sys.exit(0)
+    #bestimmt beta und gamma und gibt diese zurück
+    beta, gamma = parameterbestimmung()
     # initialize a Runge Kutta solver
     bi_solve = RKsolve()
     bi_solve.example = 'SIR'  
     bi_solve.method = 'RungeKutta'
-    bi_solve.beta = 0.004
-    bi_solve.gamma = 0.4
+    bi_solve.beta = beta
+    bi_solve.gamma = gamma
     #bi_solve.snum = 4 # number of Runge Kutta stages to be used, if not set by method itself
     
     if  bi_solve.example == 'bspBI':
@@ -302,6 +310,7 @@ if __name__ == "__main__":
         show()
         close()
     if bi_solve.example == 'SIR':
+        plot([1,2,3,4,5], [3.0, 10., 30., 65., 93.], 'bo')
         bi_solve.plot(0)
         bi_solve.plot(1)
         bi_solve.plot(2)
