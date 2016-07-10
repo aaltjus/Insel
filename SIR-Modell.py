@@ -243,12 +243,11 @@ def parameterbestimmung():
             if mittlereabweichung<besteabweichung:
                 besteabweichung = mittlereabweichung
                 bestebetaundgamma = [beta, gamma]
-                #plottet die erwarteten Werte als blaue Punkt ('bo')
-                plot([1,2,3,4,5], expected, 'bo')
+                #plottet die erwarteten Werte als grüne Punkte ('go')
+                plot([1,2,3,4,5], expected, 'go', label = 'bekannte Anzahl Kranker')
                 bi_solve.plot(0)
                 bi_solve.plot(1)
                 bi_solve.plot(2)
-                show()
                 close()
     print ('Die geringste mittlere Abweichung beträgt '+str(besteabweichung)+'. Die Parameter dazu lauten: beta = '+str(bestebetaundgamma[0])+' gamma = '+str(bestebetaundgamma[1]))
     return bestebetaundgamma
@@ -310,7 +309,7 @@ if __name__ == "__main__":
         show()
         close()
     if bi_solve.example == 'SIR':
-        plot([1,2,3,4,5], [3.0, 10., 30., 65., 93.], 'bo')
+        plot([1,2,3,4,5], [3.0, 10., 30., 65., 93.], 'go', label = 'bekannte Anzahl Kranker')
         bi_solve.plot(0)
         bi_solve.plot(1)
         bi_solve.plot(2)
