@@ -212,7 +212,7 @@ class RKsolve(object):
 def parameterbestimmung():
     expected = [3.0, 10., 30., 65., 93.]
     bestebetaundgamma = []
-    besteabweichung = 20
+    besteabweichung = 100
     for beta in arange(0.003, 0.006, 0.001):
         for gamma in arange(0.4, 0.9, 0.025):
             print 'trying beta: {}, gamma: {}'.format(beta, gamma)
@@ -237,11 +237,11 @@ def parameterbestimmung():
             differenzen=[]
             for i in range (0, 5):
                 differenzen.append(expected[i] - kranke[i])
-            #bestimmt den Betrag (abs) der mittleren Abweichung
-            mittlereabweichung = abs(mean(differenzen))
+            #bestimmt den größtmöglichen Betrag einer Abweichung vom erwarteten Wert
+            groessteabweichung = max(abs(i) for i in differenzen)
             #ersetzt die beste Abweichung mit dem aktuell besten Wert und speichert die zugehörigen beta und gamma
-            if mittlereabweichung<besteabweichung:
-                besteabweichung = mittlereabweichung
+            if groessteabweichung<besteabweichung:
+                besteabweichung = groessteabweichung
                 bestebetaundgamma = [beta, gamma]
                 #plottet die erwarteten Werte als grüne Punkte ('go')
                 plot([1,2,3,4,5], expected, 'go', label = 'bekannte Anzahl Kranker')
@@ -249,7 +249,7 @@ def parameterbestimmung():
                 bi_solve.plot(1)
                 bi_solve.plot(2)
                 close()
-    print ('Die geringste mittlere Abweichung beträgt '+str(besteabweichung)+'. Die Parameter dazu lauten: beta = '+str(bestebetaundgamma[0])+' gamma = '+str(bestebetaundgamma[1]))
+    print ('Die geringste absolute Abweichung beträgt '+str(besteabweichung)+'. Die Parameter dazu lauten: beta = '+str(bestebetaundgamma[0])+' gamma = '+str(bestebetaundgamma[1]))
     return bestebetaundgamma
             
                 
