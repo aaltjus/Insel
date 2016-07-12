@@ -183,7 +183,7 @@ class RKsolve(object):
 ########################################################
 
     # plot the approximate solution to a file with a discriptive naming
-    def plot(self,i):
+    def plot(self,i, praefix=''):
         # plot i-th component
         t = self.tout
         x = self.xout[:,i]
@@ -200,8 +200,9 @@ class RKsolve(object):
         legend(loc='center right', shadow=True)
         xlabel('t')
         ylabel('x(t)')
+        #speichert die Plotts, sobald alle 3 Graphen enthalten sind
         if i == 2:
-            savefig('sol_'+self.example+'_'+self.method+'_s'+str(self.snum)+'_i'+str(i)+str(self.beta)+str(self.gamma)+'.png')
+            savefig('sol_'+str(praefix)+'_'+self.example+'_'+self.method+'_s'+str(self.snum)+'_i'+str(i)+str(self.beta)+str(self.gamma)+'.png')
         #print (t[0], t[1e2], t[2*1e2], t[3*1e2], t[4*1e2]), (x[0], x[1e2], x[2*1e2], x[3*1e2], x[4*1e2])
         #show()
         #close()
@@ -247,7 +248,8 @@ def parameterbestimmung():
                 plot([1,2,3,4,5], expected, 'go', label = 'bekannte Anzahl Kranker')
                 bi_solve.plot(0)
                 bi_solve.plot(1)
-                bi_solve.plot(2)
+                #der praefix sorgt dafür, dass zu Beginn des Dateinamens die besteabweichung steht und die Dateien somit in der richtigen Reihenfolge gespeichert werden.
+                bi_solve.plot(2, praefix=besteabweichung)
                 close()
     print ('Die geringste absolute Abweichung beträgt '+str(besteabweichung)+'. Die Parameter dazu lauten: beta = '+str(bestebetaundgamma[0])+' gamma = '+str(bestebetaundgamma[1]))
     return bestebetaundgamma
