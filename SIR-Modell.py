@@ -18,9 +18,10 @@
 #
 # Erstellt von Caren Tischendorf, Hella Rabus
 # fuer die VL "Angewandte Mathematik II"
+#bearbeitet von Jana Lutz und Aatje Mazur für ebendiese Veranstaltung
 #
 #importiert die wichtigen Pakete
-from numpy import array, exp, zeros, arange, mean
+from numpy import array, exp, zeros, arange, mean, meshgrid
 from scipy.linalg import solve
 from scipy.optimize import fsolve
 from matplotlib import use
@@ -29,6 +30,7 @@ from matplotlib.pyplot import (axis,
             close,
             legend,
             plot,
+            figure,
             rcParams,
             show,
             title,
@@ -36,6 +38,7 @@ from matplotlib.pyplot import (axis,
             ylabel,
             yscale,
             xscale)
+from mpl_toolkits.mplot3d import Axes3D
 from pylab import savefig
 import math
 
@@ -165,7 +168,9 @@ class RKsolve(object):
             y[1] = self.beta*x[0]*x[1]-self.gamma*x[1]
             #y[2] = R'
             y[2] = self.gamma*x[1]
+        self.y = y
         return y
+        
     
 ########################################################
 
@@ -185,17 +190,19 @@ class RKsolve(object):
     # plot the approximate solution to a file with a discriptive naming
     def plot(self,i, praefix=''):
         # plot i-th component
+        h = self.h
         t = self.tout
         x = self.xout[:,i]
         #ordnet den jeweiligen Stellen im Vektor die richtige Bezeichnung zu, die vom Plot aufgerufen werden kann
         label = ['Anzahl der Gesunden', 'Anzahl der Kranken', 'Anzahl der Resistenten']
         p0 = plot(t, x, linewidth = 2, label = label[i])
-        try:
-            self.exactsol()
-            p1=plot(t,self.xexact, 'r',label='exakte Loesung')
-        except:
-            print("no exact solution given")
-        title('Beispiel '+self.example+' mit '+self.method+', Stufenanzahl:'+str(self.snum))
+        #das Folgende ist auskommentiert, da wir keine exakte Lösung haben
+        #try:
+            #self.exactsol()
+            #p1=plot(t,self.xexact, 'r',label='exakte Loesung')
+        #except:
+            #print("no exact solution given")
+        title(self.example+' mit '+self.method+', h='+str(h)+', beta = '+str(self.beta)+', gamma = '+str(self.gamma))
         rcParams.update({'font.size': 12})
         legend(loc='center right', shadow=True)
         xlabel('t')
@@ -206,6 +213,24 @@ class RKsolve(object):
         #print (t[0], t[1e2], t[2*1e2], t[3*1e2], t[4*1e2]), (x[0], x[1e2], x[2*1e2], x[3*1e2], x[4*1e2])
         #show()
         #close()
+        
+########################################################
+
+#Phasenplot
+    def phasenplot(self):
+        #fig = figure()
+        #ax = fig.gca(projection='3d')
+        gesunde = self.xout[:,0]
+        #kranke = self.xout[:,1]
+        resistente = self.xout[:,2]
+        #gesunde, kranke, resistente = meshgrid(gesunde, kranke, resistente)
+        #ax.plot_wireframe(gesunde, kranke, resistente)
+        plot(gesunde, resistente)
+        show()
+        close()
+        print gesunde
+        #print kranke
+        print resistente
         
 ########################################################
 
@@ -261,6 +286,9 @@ def parameterbestimmung():
 if __name__ == "__main__":
     #bestimmt beta und gamma und gibt diese zurück
     beta, gamma = parameterbestimmung()
+    #die folgenden zwei Zeilen sind hardgecodete beta und gamma-Werte für schnelleren Zugriff auf z.B. den Phasenplot, da wir uns dann die parameterbestimmung sparen
+    #beta = 0.005
+    #gamma = 0.8
     # initialize a Runge Kutta solver
     bi_solve = RKsolve()
     bi_solve.example = 'SIR'  
@@ -282,6 +310,7 @@ if __name__ == "__main__":
     if bi_solve.example == 'SIR':
         T = 20.
         t0 = 1
+        #hier können Veränderungen vorgenommen werden, wenn z.B. einige Menschen von Anfang an geimpft sind
         x0 = array([397.0, 3.0, 0.0])
         h = 1e-2
     
@@ -289,7 +318,7 @@ if __name__ == "__main__":
     # actual solve phase
     dim = len(x0)
     
-    # Konvergenzordnungstest
+    #Konvergenzordnungstest (nur möglich mit example=bspBI, da wir sonst keine exakte Lösung kennen
     #hlist = [h, h/2.0, h/4., h/8., h/16., h/32, h/64, h/128, h/256, h/512, h/1024, h/2048, h/4096]
     #hlist = [2**(-i) for i in xrange(12)]
     #bi_solve.konvergenzordnungsplott(t0,T,x0,hlist)
@@ -305,7 +334,8 @@ if __name__ == "__main__":
             #errork[j] = errork[j]/max(abs(xexactk[j]),1e-40)
 
     #print bi_solve.xout
-    # plotting
+    #plotting, Phasenplot in der Regel auskommentiert, da wir den nicht jedes Mal benötigen
+    #bi_solve.phasenplot()
     if bi_solve.example == 'bspBI':
         bi_solve.plot(0)
         show()
